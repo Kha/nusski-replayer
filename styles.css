@@ -1,0 +1,22 @@
+.row {
+    line-height: 0px;
+}
+
+.field {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    border-radius:  100px;
+}
+
+.field.b, .field.w {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    width: 48px;
+    height: 48px;
+}
+
+.field.b {
+    background-color: black;
+}
