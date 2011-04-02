@@ -7,7 +7,7 @@ class Position
   isValid: -> 0 <= @x <= 8 and 0 <= @y <= 8
 
   @parse = (s) -> new Position s.charCodeAt(0) - 'a'.charCodeAt(0), s.charCodeAt(1) - '1'.charCodeAt(0)
-  @surrounding = ((new Position x, y for x in [-1,0,1] when x != 0 or y != 0) for y in [-1,0,1])
+  @surrounding = (new Position x, y for [x, y] in [[-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]])
 
 class Board
   constructor: (@id) ->
@@ -34,12 +34,13 @@ class Board
 
   cancel: -> window.clearInterval @timer
 
+  getOpposing: -> if @player == 'w' then 'b' else 'w'
   move: ->
     if @moves.length == 0
       @cancel()
       return
 
-    @player = if @player == 'w' then 'b' else 'w'
+    @player = @getOpposing()
     move = @moves.shift()
     return if move.length == 0
 
@@ -49,7 +50,7 @@ class Board
 
     @set from, 'nil' if Math.abs(from.x - to.x) == 2 || Math.abs(from.y - to.y) == 2
     @set to, @player
-    @set to.add dir, @player for dir in Position.surrounding when to.add(dir).isValid()
+    @set to.add(dir), @player for dir in Position.surrounding when to.add(dir).isValid() and @get(to.add dir) == @getOpposing()
 
 class Replay
   constructor: (data) ->
