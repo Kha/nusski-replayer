@@ -69,7 +69,6 @@ class Replay
           @board.cancel()
           @board.div.detach()
           @board = null
-      false
 
     parent.append li
 
