@@ -1,6 +1,6 @@
 (function() {
   var Board, Position, Replay, server;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
   server = 'http://www.entwickler-ecke.de/nusski/nuss.php';
   Position = (function() {
     var x, y;
@@ -83,7 +83,14 @@
     };
     Board.prototype.parseMoves = function(cont) {
       return $.get("" + server + "?mode=getReplay&game=" + this.id, __bind(function(data) {
-        this.moves = data.split(';');
+        var blocked, moves, pos, _i, _len, _ref, _ref2;
+        _ref = data.split(';'), blocked = _ref[0], moves = 2 <= _ref.length ? __slice.call(_ref, 1) : [];
+        this.moves = moves;
+        _ref2 = blocked.split(',');
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          pos = _ref2[_i];
+          this.set(Position.parse(pos), 'blocked');
+        }
         return cont();
       }, this));
     };
@@ -140,15 +147,14 @@
         if (!(this.board != null)) {
           this.board = new Board(this.id);
           li.append(this.board.div);
-          this.board.div.slideToggle('slow');
+          return this.board.div.slideToggle('slow');
         } else {
-          this.board.div.slideToggle('slow', __bind(function() {
+          return this.board.div.slideToggle('slow', __bind(function() {
             this.board.cancel();
             this.board.div.detach();
             return this.board = null;
           }, this));
         }
-        return false;
       }, this));
       return parent.append(li);
     };
