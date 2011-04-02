@@ -20,3 +20,7 @@
 .field.b {
     background-color: black;
 }
+
+.field.blocked {
+    background-color: grey;
+}

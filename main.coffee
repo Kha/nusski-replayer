@@ -29,7 +29,9 @@ class Board
   set: ({ x: x, y: y }, color) -> @board[y][x].attr "class", "field " + color
 
   parseMoves: (cont) -> $.get "#{server}?mode=getReplay&game=#{@id}", (data) =>
-    @moves = data.split ';'
+    [blocked, moves...] = data.split ';'
+    @moves = moves
+    @set Position.parse(pos), 'blocked' for pos in blocked.split ','
     cont()
 
   cancel: -> window.clearInterval @timer
